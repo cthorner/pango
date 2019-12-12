@@ -40,6 +40,8 @@ pub trait FontMapExt: 'static {
 
     fn load_font(&self, context: &Context, desc: &FontDescription) -> Option<Font>;
 
+    fn clear_cache(&self);
+
     fn load_fontset(
         &self,
         context: &Context,
@@ -95,6 +97,12 @@ impl<O: IsA<FontMap>> FontMapExt for O {
                 context.to_glib_none().0,
                 desc.to_glib_none().0,
             ))
+        }
+    }
+
+    fn clear_cache(&self) {
+        unsafe {
+            pango_sys::pango_fc_font_map_cache_clear(self.as_ref().to_glib_none().0);
         }
     }
 
