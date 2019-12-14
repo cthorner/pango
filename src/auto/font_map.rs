@@ -49,19 +49,19 @@ pub trait FontMapExt: 'static {
 }
 
 impl<O: IsA<FontMap>> FontMapExt for O {
-    #[cfg(any(feature = "v1_38", feature = "dox"))]
     fn config_changed(&self) {
         unsafe {
             pango_sys::pango_fc_font_map_config_changed(self.as_ref().to_glib_none().0);
         }
     }
-
+    
     fn pango_fc_font_map_cache_clear(&self) {
         unsafe {
             pango_sys::pango_fc_font_map_cache_clear(self.as_ref().to_glib_none().0);
         }
     }
-
+    
+    #[cfg(any(feature = "v1_38", feature = "dox"))]
     fn changed(&self) {
         unsafe {
             pango_sys::pango_font_map_changed(self.as_ref().to_glib_none().0);
