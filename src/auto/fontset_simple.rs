@@ -21,23 +21,20 @@ glib_wrapper! {
 impl FontsetSimple {
     pub fn new(language: &mut Language) -> FontsetSimple {
         unsafe {
-            from_glib_full(pango_sys::pango_fontset_simple_new(
-                language.to_glib_none_mut().0,
-            ))
+            from_glib_full(pango_sys::pango_fontset_simple_new(language.to_glib_none_mut().0))
         }
     }
 
     pub fn append<P: IsA<Font>>(&self, font: &P) {
         unsafe {
-            pango_sys::pango_fontset_simple_append(
-                self.to_glib_none().0,
-                font.as_ref().to_glib_none().0,
-            );
+            pango_sys::pango_fontset_simple_append(self.to_glib_none().0, font.as_ref().to_glib_none().0);
         }
     }
 
     pub fn size(&self) -> i32 {
-        unsafe { pango_sys::pango_fontset_simple_size(self.to_glib_none().0) }
+        unsafe {
+            pango_sys::pango_fontset_simple_size(self.to_glib_none().0)
+        }
     }
 }
 

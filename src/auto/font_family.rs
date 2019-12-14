@@ -32,30 +32,22 @@ pub trait FontFamilyExt: 'static {
 impl<O: IsA<FontFamily>> FontFamilyExt for O {
     fn get_name(&self) -> Option<GString> {
         unsafe {
-            from_glib_none(pango_sys::pango_font_family_get_name(
-                self.as_ref().to_glib_none().0,
-            ))
+            from_glib_none(pango_sys::pango_font_family_get_name(self.as_ref().to_glib_none().0))
         }
     }
 
     fn is_monospace(&self) -> bool {
         unsafe {
-            from_glib(pango_sys::pango_font_family_is_monospace(
-                self.as_ref().to_glib_none().0,
-            ))
+            from_glib(pango_sys::pango_font_family_is_monospace(self.as_ref().to_glib_none().0))
         }
     }
 
     fn list_faces(&self) -> Vec<FontFace> {
         unsafe {
             let mut faces = ptr::null_mut();
-            let mut n_faces = mem::uninitialized();
-            pango_sys::pango_font_family_list_faces(
-                self.as_ref().to_glib_none().0,
-                &mut faces,
-                &mut n_faces,
-            );
-            FromGlibContainer::from_glib_container_num(faces, n_faces as usize)
+            let mut n_faces = mem::MaybeUninit::uninit();
+            pango_sys::pango_font_family_list_faces(self.as_ref().to_glib_none().0, &mut faces, n_faces.as_mut_ptr());
+            FromGlibContainer::from_glib_container_num(faces, n_faces.assume_init() as usize)
         }
     }
 }

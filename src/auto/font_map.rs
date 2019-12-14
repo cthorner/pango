@@ -27,6 +27,11 @@ glib_wrapper! {
 pub const NONE_FONT_MAP: Option<&FontMap> = None;
 
 pub trait FontMapExt: 'static {
+    #[cfg(any(feature = "v1_38", feature = "dox"))]
+    fn config_changed(&self);
+
+    fn pango_fc_font_map_cache_clear(&self);
+
     fn changed(&self);
 
     fn create_context(&self) -> Option<Context>;
@@ -40,15 +45,23 @@ pub trait FontMapExt: 'static {
 
     fn load_font(&self, context: &Context, desc: &FontDescription) -> Option<Font>;
 
-    fn load_fontset(
-        &self,
-        context: &Context,
-        desc: &FontDescription,
-        language: &Language,
-    ) -> Option<Fontset>;
+    fn load_fontset(&self, context: &Context, desc: &FontDescription, language: &Language) -> Option<Fontset>;
 }
 
 impl<O: IsA<FontMap>> FontMapExt for O {
+    #[cfg(any(feature = "v1_38", feature = "dox"))]
+    fn config_changed(&self) {
+        unsafe {
+            pango_sys::pango_fc_font_map_config_changed(self.as_ref().to_glib_none().0);
+        }
+    }
+
+    fn pango_fc_font_map_cache_clear(&self) {
+        unsafe {
+            pango_sys::pango_fc_font_map_cache_clear(self.as_ref().to_glib_none().0);
+        }
+    }
+
     fn changed(&self) {
         unsafe {
             pango_sys::pango_font_map_changed(self.as_ref().to_glib_none().0);
@@ -57,60 +70,40 @@ impl<O: IsA<FontMap>> FontMapExt for O {
 
     fn create_context(&self) -> Option<Context> {
         unsafe {
-            from_glib_full(pango_sys::pango_font_map_create_context(
-                self.as_ref().to_glib_none().0,
-            ))
+            from_glib_full(pango_sys::pango_font_map_create_context(self.as_ref().to_glib_none().0))
         }
     }
 
     fn get_serial(&self) -> u32 {
-        unsafe { pango_sys::pango_font_map_get_serial(self.as_ref().to_glib_none().0) }
+        unsafe {
+            pango_sys::pango_font_map_get_serial(self.as_ref().to_glib_none().0)
+        }
     }
 
     fn get_shape_engine_type(&self) -> Option<GString> {
         unsafe {
-            from_glib_none(pango_sys::pango_font_map_get_shape_engine_type(
-                self.as_ref().to_glib_none().0,
-            ))
+            from_glib_none(pango_sys::pango_font_map_get_shape_engine_type(self.as_ref().to_glib_none().0))
         }
     }
 
     fn list_families(&self) -> Vec<FontFamily> {
         unsafe {
             let mut families = ptr::null_mut();
-            let mut n_families = mem::uninitialized();
-            pango_sys::pango_font_map_list_families(
-                self.as_ref().to_glib_none().0,
-                &mut families,
-                &mut n_families,
-            );
-            FromGlibContainer::from_glib_container_num(families, n_families as usize)
+            let mut n_families = mem::MaybeUninit::uninit();
+            pango_sys::pango_font_map_list_families(self.as_ref().to_glib_none().0, &mut families, n_families.as_mut_ptr());
+            FromGlibContainer::from_glib_container_num(families, n_families.assume_init() as usize)
         }
     }
 
     fn load_font(&self, context: &Context, desc: &FontDescription) -> Option<Font> {
         unsafe {
-            from_glib_full(pango_sys::pango_font_map_load_font(
-                self.as_ref().to_glib_none().0,
-                context.to_glib_none().0,
-                desc.to_glib_none().0,
-            ))
+            from_glib_full(pango_sys::pango_font_map_load_font(self.as_ref().to_glib_none().0, context.to_glib_none().0, desc.to_glib_none().0))
         }
     }
 
-    fn load_fontset(
-        &self,
-        context: &Context,
-        desc: &FontDescription,
-        language: &Language,
-    ) -> Option<Fontset> {
+    fn load_fontset(&self, context: &Context, desc: &FontDescription, language: &Language) -> Option<Fontset> {
         unsafe {
-            from_glib_full(pango_sys::pango_font_map_load_fontset(
-                self.as_ref().to_glib_none().0,
-                context.to_glib_none().0,
-                desc.to_glib_none().0,
-                mut_override(language.to_glib_none().0),
-            ))
+            from_glib_full(pango_sys::pango_font_map_load_fontset(self.as_ref().to_glib_none().0, context.to_glib_none().0, desc.to_glib_none().0, mut_override(language.to_glib_none().0)))
         }
     }
 }

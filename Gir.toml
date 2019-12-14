@@ -208,6 +208,11 @@ status = "generate"
         [[object.function.parameter]]
         name = "language"
         const = true
+    [[object.function]]
+    name = "clear_cache"
+        [[object.function.parameter]]
+        name = "font_map"
+        const = true
 
 [[object]]
 name = "Pango.Layout"

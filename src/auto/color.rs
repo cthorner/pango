@@ -21,15 +21,14 @@ glib_wrapper! {
 impl Color {
     pub fn parse(&mut self, spec: &str) -> bool {
         unsafe {
-            from_glib(pango_sys::pango_color_parse(
-                self.to_glib_none_mut().0,
-                spec.to_glib_none().0,
-            ))
+            from_glib(pango_sys::pango_color_parse(self.to_glib_none_mut().0, spec.to_glib_none().0))
         }
     }
 
     fn to_string(&self) -> GString {
-        unsafe { from_glib_full(pango_sys::pango_color_to_string(self.to_glib_none().0)) }
+        unsafe {
+            from_glib_full(pango_sys::pango_color_to_string(self.to_glib_none().0))
+        }
     }
 }
 

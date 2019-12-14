@@ -21,34 +21,29 @@ glib_wrapper! {
 impl AttrIterator {
     pub fn get(&mut self, type_: AttrType) -> Option<Attribute> {
         unsafe {
-            from_glib_none(pango_sys::pango_attr_iterator_get(
-                self.to_glib_none_mut().0,
-                type_.to_glib(),
-            ))
+            from_glib_none(pango_sys::pango_attr_iterator_get(self.to_glib_none_mut().0, type_.to_glib()))
         }
     }
 
     pub fn get_attrs(&mut self) -> Vec<Attribute> {
         unsafe {
-            FromGlibPtrContainer::from_glib_full(pango_sys::pango_attr_iterator_get_attrs(
-                self.to_glib_none_mut().0,
-            ))
+            FromGlibPtrContainer::from_glib_full(pango_sys::pango_attr_iterator_get_attrs(self.to_glib_none_mut().0))
         }
     }
 
     pub fn next(&mut self) -> bool {
         unsafe {
-            from_glib(pango_sys::pango_attr_iterator_next(
-                self.to_glib_none_mut().0,
-            ))
+            from_glib(pango_sys::pango_attr_iterator_next(self.to_glib_none_mut().0))
         }
     }
 
     pub fn range(&mut self) -> (i32, i32) {
         unsafe {
-            let mut start = mem::uninitialized();
-            let mut end = mem::uninitialized();
-            pango_sys::pango_attr_iterator_range(self.to_glib_none_mut().0, &mut start, &mut end);
+            let mut start = mem::MaybeUninit::uninit();
+            let mut end = mem::MaybeUninit::uninit();
+            pango_sys::pango_attr_iterator_range(self.to_glib_none_mut().0, start.as_mut_ptr(), end.as_mut_ptr());
+            let start = start.assume_init();
+            let end = end.assume_init();
             (start, end)
         }
     }
