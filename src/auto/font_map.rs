@@ -4,7 +4,6 @@
 
 use glib::object::IsA;
 use glib::translate::*;
-use glib::GString;
 use pango_sys;
 use std::fmt;
 use std::mem;
@@ -33,14 +32,9 @@ pub trait FontMapExt: 'static {
 
     fn get_serial(&self) -> u32;
 
-    #[cfg_attr(feature = "v1_38", deprecated)]
-    fn get_shape_engine_type(&self) -> Option<GString>;
-
     fn list_families(&self) -> Vec<FontFamily>;
 
     fn load_font(&self, context: &Context, desc: &FontDescription) -> Option<Font>;
-
-    fn clear_cache(&self);
 
     fn load_fontset(
         &self,
@@ -69,14 +63,6 @@ impl<O: IsA<FontMap>> FontMapExt for O {
         unsafe { pango_sys::pango_font_map_get_serial(self.as_ref().to_glib_none().0) }
     }
 
-    fn get_shape_engine_type(&self) -> Option<GString> {
-        unsafe {
-            from_glib_none(pango_sys::pango_font_map_get_shape_engine_type(
-                self.as_ref().to_glib_none().0,
-            ))
-        }
-    }
-
     fn list_families(&self) -> Vec<FontFamily> {
         unsafe {
             let mut families = ptr::null_mut();
@@ -97,12 +83,6 @@ impl<O: IsA<FontMap>> FontMapExt for O {
                 context.to_glib_none().0,
                 desc.to_glib_none().0,
             ))
-        }
-    }
-
-    fn clear_cache(&self) {
-        unsafe {
-            pango_sys::pango_fc_font_map_cache_clear(self.as_ref().to_glib_none().0);
         }
     }
 
