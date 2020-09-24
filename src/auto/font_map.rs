@@ -28,9 +28,9 @@ pub const NONE_FONT_MAP: Option<&FontMap> = None;
 
 pub trait FontMapExt: 'static {
     fn config_changed(&self);
-    
+
     fn pango_fc_font_map_cache_clear(&self);
-    
+
     // #[cfg(any(feature = "v1_38", feature = "dox"))]
     fn changed(&self);
 
@@ -54,13 +54,13 @@ impl<O: IsA<FontMap>> FontMapExt for O {
             pango_sys::pango_fc_font_map_config_changed(self.as_ref().to_glib_none().0);
         }
     }
-    
+
     fn pango_fc_font_map_cache_clear(&self) {
         unsafe {
             pango_sys::pango_fc_font_map_cache_clear(self.as_ref().to_glib_none().0);
         }
     }
-    
+
     // #[cfg(any(feature = "v1_38", feature = "dox"))]
     fn changed(&self) {
         unsafe {
@@ -90,7 +90,12 @@ impl<O: IsA<FontMap>> FontMapExt for O {
         unsafe {
             let mut families = ptr::null_mut();
             let mut n_families = mem::MaybeUninit::uninit();
-            pango_sys::pango_font_map_list_families(self.as_ref().to_glib_none().0, &mut families, n_families.as_mut_ptr());
+
+            pango_sys::pango_font_map_list_families(
+                self.as_ref().to_glib_none().0,
+                &mut families,
+                n_families.as_mut_ptr(),
+            );
             FromGlibContainer::from_glib_container_num(families, n_families.assume_init() as usize)
         }
     }

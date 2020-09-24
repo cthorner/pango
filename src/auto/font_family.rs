@@ -46,7 +46,12 @@ impl<O: IsA<FontFamily>> FontFamilyExt for O {
         unsafe {
             let mut faces = ptr::null_mut();
             let mut n_faces = mem::MaybeUninit::uninit();
-            pango_sys::pango_font_family_list_faces(self.as_ref().to_glib_none().0, &mut faces, n_faces.as_mut_ptr());
+
+            pango_sys::pango_font_family_list_faces(
+                self.as_ref().to_glib_none().0,
+                &mut faces,
+                n_faces.as_mut_ptr(),
+            );
             FromGlibContainer::from_glib_container_num(faces, n_faces.assume_init() as usize)
         }
     }

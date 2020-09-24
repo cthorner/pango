@@ -105,7 +105,12 @@ impl Context {
         unsafe {
             let mut families = ptr::null_mut();
             let mut n_families = mem::MaybeUninit::uninit();
-            pango_sys::pango_context_list_families(self.to_glib_none().0, &mut families, n_families.as_mut_ptr());
+
+            pango_sys::pango_context_list_families(
+                self.to_glib_none().0,
+                &mut families,
+                n_families.as_mut_ptr(),
+            );
             FromGlibContainer::from_glib_container_num(families, n_families.assume_init() as usize)
         }
     }

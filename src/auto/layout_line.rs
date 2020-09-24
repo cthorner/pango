@@ -42,7 +42,14 @@ impl LayoutLine {
         unsafe {
             let mut ranges = ptr::null_mut();
             let mut n_ranges = mem::MaybeUninit::uninit();
-            pango_sys::pango_layout_line_get_x_ranges(self.to_glib_none().0, start_index, end_index, &mut ranges, n_ranges.as_mut_ptr());
+
+            pango_sys::pango_layout_line_get_x_ranges(
+                self.to_glib_none().0,
+                start_index,
+                end_index,
+                &mut ranges,
+                n_ranges.as_mut_ptr(),
+            );
             FromGlibContainer::from_glib_full_num(ranges, n_ranges.assume_init() as usize)
         }
     }
@@ -50,7 +57,13 @@ impl LayoutLine {
     pub fn index_to_x(&self, index_: i32, trailing: bool) -> i32 {
         unsafe {
             let mut x_pos = mem::MaybeUninit::uninit();
-            pango_sys::pango_layout_line_index_to_x(self.to_glib_none().0, index_, trailing.to_glib(), x_pos.as_mut_ptr());
+
+            pango_sys::pango_layout_line_index_to_x(
+                self.to_glib_none().0,
+                index_,
+                trailing.to_glib(),
+                x_pos.as_mut_ptr(),
+            );
             let x_pos = x_pos.assume_init();
             x_pos
         }
@@ -60,10 +73,19 @@ impl LayoutLine {
         unsafe {
             let mut index_ = mem::MaybeUninit::uninit();
             let mut trailing = mem::MaybeUninit::uninit();
-            let ret = from_glib(pango_sys::pango_layout_line_x_to_index(self.to_glib_none().0, x_pos, index_.as_mut_ptr(), trailing.as_mut_ptr()));
+            let ret = from_glib(pango_sys::pango_layout_line_x_to_index(
+                self.to_glib_none().0,
+                x_pos,
+                index_.as_mut_ptr(),
+                trailing.as_mut_ptr(),
+            ));
             let index_ = index_.assume_init();
             let trailing = trailing.assume_init();
-            if ret { Some((index_, trailing)) } else { None }
+            if ret {
+                Some((index_, trailing))
+            } else {
+                None
+            }
         }
     }
 }

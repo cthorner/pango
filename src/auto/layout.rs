@@ -186,7 +186,12 @@ impl Layout {
         unsafe {
             let mut width = mem::MaybeUninit::uninit();
             let mut height = mem::MaybeUninit::uninit();
-            pango_sys::pango_layout_get_pixel_size(self.to_glib_none().0, width.as_mut_ptr(), height.as_mut_ptr());
+
+            pango_sys::pango_layout_get_pixel_size(
+                self.to_glib_none().0,
+                width.as_mut_ptr(),
+                height.as_mut_ptr(),
+            );
             let width = width.assume_init();
             let height = height.assume_init();
             (width, height)
@@ -209,7 +214,12 @@ impl Layout {
         unsafe {
             let mut width = mem::MaybeUninit::uninit();
             let mut height = mem::MaybeUninit::uninit();
-            pango_sys::pango_layout_get_size(self.to_glib_none().0, width.as_mut_ptr(), height.as_mut_ptr());
+
+            pango_sys::pango_layout_get_size(
+                self.to_glib_none().0,
+                width.as_mut_ptr(),
+                height.as_mut_ptr(),
+            );
             let width = width.assume_init();
             let height = height.assume_init();
             (width, height)
@@ -256,7 +266,14 @@ impl Layout {
         unsafe {
             let mut line = mem::MaybeUninit::uninit();
             let mut x_pos = mem::MaybeUninit::uninit();
-            pango_sys::pango_layout_index_to_line_x(self.to_glib_none().0, index_, trailing.to_glib(), line.as_mut_ptr(), x_pos.as_mut_ptr());
+
+            pango_sys::pango_layout_index_to_line_x(
+                self.to_glib_none().0,
+                index_,
+                trailing.to_glib(),
+                line.as_mut_ptr(),
+                x_pos.as_mut_ptr(),
+            );
             let line = line.assume_init();
             let x_pos = x_pos.assume_init();
             (line, x_pos)
@@ -278,16 +295,28 @@ impl Layout {
     }
 
     pub fn is_wrapped(&self) -> bool {
-        unsafe {
-            from_glib(pango_sys::pango_layout_is_wrapped(self.to_glib_none().0))
-        }
+        unsafe { from_glib(pango_sys::pango_layout_is_wrapped(self.to_glib_none().0)) }
     }
 
-    pub fn move_cursor_visually(&self, strong: bool, old_index: i32, old_trailing: i32, direction: i32) -> (i32, i32) {
+    pub fn move_cursor_visually(
+        &self,
+        strong: bool,
+        old_index: i32,
+        old_trailing: i32,
+        direction: i32,
+    ) -> (i32, i32) {
         unsafe {
             let mut new_index = mem::MaybeUninit::uninit();
             let mut new_trailing = mem::MaybeUninit::uninit();
-            pango_sys::pango_layout_move_cursor_visually(self.to_glib_none().0, strong.to_glib(), old_index, old_trailing, direction, new_index.as_mut_ptr(), new_trailing.as_mut_ptr());
+            pango_sys::pango_layout_move_cursor_visually(
+                self.to_glib_none().0,
+                strong.to_glib(),
+                old_index,
+                old_trailing,
+                direction,
+                new_index.as_mut_ptr(),
+                new_trailing.as_mut_ptr(),
+            );
             let new_index = new_index.assume_init();
             let new_trailing = new_trailing.assume_init();
             (new_index, new_trailing)
@@ -353,7 +382,13 @@ impl Layout {
         let length = markup.len() as i32;
         unsafe {
             let mut accel_char = mem::MaybeUninit::uninit();
-            pango_sys::pango_layout_set_markup_with_accel(self.to_glib_none().0, markup.to_glib_none().0, length, accel_marker.to_glib(), accel_char.as_mut_ptr());
+            pango_sys::pango_layout_set_markup_with_accel(
+                self.to_glib_none().0,
+                markup.to_glib_none().0,
+                length,
+                accel_marker.to_glib(),
+                accel_char.as_mut_ptr(),
+            );
             let accel_char = accel_char.assume_init();
             from_glib(accel_char)
         }
@@ -400,7 +435,13 @@ impl Layout {
         unsafe {
             let mut index_ = mem::MaybeUninit::uninit();
             let mut trailing = mem::MaybeUninit::uninit();
-            let ret = from_glib(pango_sys::pango_layout_xy_to_index(self.to_glib_none().0, x, y, index_.as_mut_ptr(), trailing.as_mut_ptr()));
+            let ret = from_glib(pango_sys::pango_layout_xy_to_index(
+                self.to_glib_none().0,
+                x,
+                y,
+                index_.as_mut_ptr(),
+                trailing.as_mut_ptr(),
+            ));
             let index_ = index_.assume_init();
             let trailing = trailing.assume_init();
             (ret, index_, trailing)

@@ -67,7 +67,13 @@ pub fn find_paragraph_boundary(text: &str) -> (i32, i32) {
     unsafe {
         let mut paragraph_delimiter_index = mem::MaybeUninit::uninit();
         let mut next_paragraph_start = mem::MaybeUninit::uninit();
-        pango_sys::pango_find_paragraph_boundary(text.to_glib_none().0, length, paragraph_delimiter_index.as_mut_ptr(), next_paragraph_start.as_mut_ptr());
+
+        pango_sys::pango_find_paragraph_boundary(
+            text.to_glib_none().0,
+            length,
+            paragraph_delimiter_index.as_mut_ptr(),
+            next_paragraph_start.as_mut_ptr(),
+        );
         let paragraph_delimiter_index = paragraph_delimiter_index.assume_init();
         let next_paragraph_start = next_paragraph_start.assume_init();
         (paragraph_delimiter_index, next_paragraph_start)
@@ -128,6 +134,7 @@ pub fn parse_enum(type_: glib::types::Type, str: Option<&str>, warn: bool) -> Op
     unsafe {
         let mut value = mem::MaybeUninit::uninit();
         let mut possible_values = ptr::null_mut();
+<<<<<<< HEAD
         let ret = from_glib(pango_sys::pango_parse_enum(type_.to_glib(), str.to_glib_none().0, value.as_mut_ptr(), warn.to_glib(), &mut possible_values));
         let value = value.assume_init();
         if ret { Some((value, from_glib_full(possible_values))) } else { None }
@@ -135,51 +142,151 @@ pub fn parse_enum(type_: glib::types::Type, str: Option<&str>, warn: bool) -> Op
 }
 
 pub fn parse_markup(markup_text: &str, accel_marker: char) -> Result<(AttrList, GString, char), glib::Error> {
+=======
+        let ret = from_glib(pango_sys::pango_parse_enum(
+            type_.to_glib(),
+            str.to_glib_none().0,
+            value.as_mut_ptr(),
+            warn.to_glib(),
+            &mut possible_values,
+        ));
+        let value = value.assume_init();
+        if ret {
+            Some((value, from_glib_full(possible_values)))
+        } else {
+            None
+        }
+    }
+}
+
+pub fn parse_markup(
+    markup_text: &str,
+    accel_marker: char,
+) -> Result<(AttrList, GString, char), glib::Error> {
+>>>>>>> f659013e4f76198f5bc2285ae48fad954d2fecbd
     let length = markup_text.len() as i32;
     unsafe {
         let mut attr_list = ptr::null_mut();
         let mut text = ptr::null_mut();
         let mut accel_char = mem::MaybeUninit::uninit();
         let mut error = ptr::null_mut();
+<<<<<<< HEAD
         let _ = pango_sys::pango_parse_markup(markup_text.to_glib_none().0, length, accel_marker.to_glib(), &mut attr_list, &mut text, accel_char.as_mut_ptr(), &mut error);
         let accel_char = accel_char.assume_init();
         if error.is_null() { Ok((from_glib_full(attr_list), from_glib_full(text), from_glib(accel_char))) } else { Err(from_glib_full(error)) }
+=======
+        let _ = pango_sys::pango_parse_markup(
+            markup_text.to_glib_none().0,
+            length,
+            accel_marker.to_glib(),
+            &mut attr_list,
+            &mut text,
+            accel_char.as_mut_ptr(),
+            &mut error,
+        );
+        let accel_char = accel_char.assume_init();
+        if error.is_null() {
+            Ok((
+                from_glib_full(attr_list),
+                from_glib_full(text),
+                from_glib(accel_char),
+            ))
+        } else {
+            Err(from_glib_full(error))
+        }
+>>>>>>> f659013e4f76198f5bc2285ae48fad954d2fecbd
     }
 }
 
 pub fn parse_stretch(str: &str, warn: bool) -> Option<Stretch> {
     unsafe {
         let mut stretch = mem::MaybeUninit::uninit();
+<<<<<<< HEAD
         let ret = from_glib(pango_sys::pango_parse_stretch(str.to_glib_none().0, stretch.as_mut_ptr(), warn.to_glib()));
         let stretch = stretch.assume_init();
         if ret { Some(from_glib(stretch)) } else { None }
+=======
+        let ret = from_glib(pango_sys::pango_parse_stretch(
+            str.to_glib_none().0,
+            stretch.as_mut_ptr(),
+            warn.to_glib(),
+        ));
+        let stretch = stretch.assume_init();
+        if ret {
+            Some(from_glib(stretch))
+        } else {
+            None
+        }
+>>>>>>> f659013e4f76198f5bc2285ae48fad954d2fecbd
     }
 }
 
 pub fn parse_style(str: &str, warn: bool) -> Option<Style> {
     unsafe {
         let mut style = mem::MaybeUninit::uninit();
+<<<<<<< HEAD
         let ret = from_glib(pango_sys::pango_parse_style(str.to_glib_none().0, style.as_mut_ptr(), warn.to_glib()));
         let style = style.assume_init();
         if ret { Some(from_glib(style)) } else { None }
+=======
+        let ret = from_glib(pango_sys::pango_parse_style(
+            str.to_glib_none().0,
+            style.as_mut_ptr(),
+            warn.to_glib(),
+        ));
+        let style = style.assume_init();
+        if ret {
+            Some(from_glib(style))
+        } else {
+            None
+        }
+>>>>>>> f659013e4f76198f5bc2285ae48fad954d2fecbd
     }
 }
 
 pub fn parse_variant(str: &str, warn: bool) -> Option<Variant> {
     unsafe {
         let mut variant = mem::MaybeUninit::uninit();
+<<<<<<< HEAD
         let ret = from_glib(pango_sys::pango_parse_variant(str.to_glib_none().0, variant.as_mut_ptr(), warn.to_glib()));
         let variant = variant.assume_init();
         if ret { Some(from_glib(variant)) } else { None }
+=======
+        let ret = from_glib(pango_sys::pango_parse_variant(
+            str.to_glib_none().0,
+            variant.as_mut_ptr(),
+            warn.to_glib(),
+        ));
+        let variant = variant.assume_init();
+        if ret {
+            Some(from_glib(variant))
+        } else {
+            None
+        }
+>>>>>>> f659013e4f76198f5bc2285ae48fad954d2fecbd
     }
 }
 
 pub fn parse_weight(str: &str, warn: bool) -> Option<Weight> {
     unsafe {
         let mut weight = mem::MaybeUninit::uninit();
+<<<<<<< HEAD
         let ret = from_glib(pango_sys::pango_parse_weight(str.to_glib_none().0, weight.as_mut_ptr(), warn.to_glib()));
         let weight = weight.assume_init();
         if ret { Some(from_glib(weight)) } else { None }
+=======
+        let ret = from_glib(pango_sys::pango_parse_weight(
+            str.to_glib_none().0,
+            weight.as_mut_ptr(),
+            warn.to_glib(),
+        ));
+        let weight = weight.assume_init();
+        if ret {
+            Some(from_glib(weight))
+        } else {
+            None
+        }
+>>>>>>> f659013e4f76198f5bc2285ae48fad954d2fecbd
     }
 }
 
