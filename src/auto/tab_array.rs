@@ -45,16 +45,12 @@ impl TabArray {
         unsafe {
             let mut alignment = mem::MaybeUninit::uninit();
             let mut location = mem::MaybeUninit::uninit();
-<<<<<<< HEAD
-            pango_sys::pango_tab_array_get_tab(self.to_glib_none_mut().0, tab_index, alignment.as_mut_ptr(), location.as_mut_ptr());
-=======
             pango_sys::pango_tab_array_get_tab(
                 self.to_glib_none_mut().0,
                 tab_index,
                 alignment.as_mut_ptr(),
                 location.as_mut_ptr(),
             );
->>>>>>> f659013e4f76198f5bc2285ae48fad954d2fecbd
             let alignment = alignment.assume_init();
             let location = location.assume_init();
             (from_glib(alignment), location)

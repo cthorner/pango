@@ -97,15 +97,11 @@ impl LayoutIter {
         unsafe {
             let mut y0_ = mem::MaybeUninit::uninit();
             let mut y1_ = mem::MaybeUninit::uninit();
-<<<<<<< HEAD
-            pango_sys::pango_layout_iter_get_line_yrange(self.to_glib_none_mut().0, y0_.as_mut_ptr(), y1_.as_mut_ptr());
-=======
             pango_sys::pango_layout_iter_get_line_yrange(
                 self.to_glib_none_mut().0,
                 y0_.as_mut_ptr(),
                 y1_.as_mut_ptr(),
             );
->>>>>>> f659013e4f76198f5bc2285ae48fad954d2fecbd
             let y0_ = y0_.assume_init();
             let y1_ = y1_.assume_init();
             (y0_, y1_)

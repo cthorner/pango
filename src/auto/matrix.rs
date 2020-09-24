@@ -36,15 +36,11 @@ impl Matrix {
         unsafe {
             let mut xscale = mem::MaybeUninit::uninit();
             let mut yscale = mem::MaybeUninit::uninit();
-<<<<<<< HEAD
-            pango_sys::pango_matrix_get_font_scale_factors(self.to_glib_none().0, xscale.as_mut_ptr(), yscale.as_mut_ptr());
-=======
             pango_sys::pango_matrix_get_font_scale_factors(
                 self.to_glib_none().0,
                 xscale.as_mut_ptr(),
                 yscale.as_mut_ptr(),
             );
->>>>>>> f659013e4f76198f5bc2285ae48fad954d2fecbd
             let xscale = xscale.assume_init();
             let yscale = yscale.assume_init();
             (xscale, yscale)
